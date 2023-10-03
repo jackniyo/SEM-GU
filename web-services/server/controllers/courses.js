@@ -19,7 +19,6 @@ router.post("/api/courses/:id/students", async function (req, res, next) {
     const studentSSN = req.body.SSN
     const studentToAdd = await Student.findOne( {SSN: studentSSN} )
 
-    console.log(course.students)
     course.students.push(studentToAdd)
     course.save()
 

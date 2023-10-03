@@ -18,11 +18,11 @@
             <input type="emailAddress" required v-model="email" placeholder="example@mail.com">
         </form>
         <button @click="addStudent">Submit</button>
-
     </div>
 </template>
 
 <script>
+import { Api } from '@/Api'
 
 export default {
   name: 'courseAddStudentPage',
@@ -46,7 +46,33 @@ export default {
      * The endpoint for this function is also missing in the backend.
      */
     addStudent() {
+      this.issueToastMessage()
+
+      Api.post('/students', {
+        SSN: this.ssn,
+        firstName: this.fName,
+        lastName: this.lastName,
+        emailAddress: this.email
+      })
+      console.warn('Create student')
       // TODO
+    },
+    issueToastMessage() {
+      // If username.length > 3 --> Green toast, otherwise red, check gmail as well
+      // Or only check if null, then ask TA if more is required
+
+      if (this.email === '') { // this.ssn === '' || this.fName === '' || this.lName === '' ||
+        this.makeToast('danger', 'Cannot create account, add a valid email.', 'Fail')
+      } else {
+        this.makeToast('success', 'Account successfully created!', 'Success')
+      }
+    },
+    makeToast(variant = null, bodyContent, titleContent) {
+      this.$bvToast.toast(bodyContent, {
+        title: titleContent,
+        variant: variant,
+        solid: true
+      })
     }
   }
 }
