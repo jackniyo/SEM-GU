@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var Course = require('../models/course');
+var Student = require('../models/student')
 
 /**
  * Implement the endpoint for creating/adding a student to the list of students of a course.
@@ -8,16 +9,36 @@ var Course = require('../models/course');
  * The student object shall exist independently of the course and shall be also found in the list of
  * all students (not just specific to a course).
  */
-router.post("/api/courses/:id/students", function (req, res, next) {
-    // TODO
+router.post("/api/courses/:id/students", async function (req, res, next) {
+
+  try {
+    // const courseId = req.params.id
+    // var course = await Course.findOne( {id: courseId} )
+    var course = await Course.findOne( {_id: req.params.id} )
+
+    const studentSSN = req.body.SSN
+    const studentToAdd = await Student.findOne( {SSN: studentSSN} )
+
+    console.log(course.students)
+    course.students.push(studentToAdd)
+    course.save()
+
+    return res.status(201).json(course.students) // NOTE: Fix the error handling and status codes (404, 500)
+  } catch (error) {
+    next(error)
+  }
 });
 
 /**
  * Implement the endpoint for getting the list of all students of a course.
  * The most important status/response codes such as 500, 404, 201, etc. and their appropriate messages shall be covered.
  */
-router.get('/api/courses/:id/students', function(req, res, next){
+router.get('/api/courses/:id/students', async function(req, res, next){
     // TODO
+    // const courseId = req.params.id
+    var course = await Course.findOne( {_id: req.params.id} ) // {id: courseId}
+    var students = course.students
+    return res.status(200).json(students)
 });
 
 router.post('/api/courses', function(req, res, next){
