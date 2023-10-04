@@ -38,33 +38,35 @@ export default {
   methods: {
     /**
      * Get the student's information from the form and add the student under the correct course.
-     * In case of success, the web page should prompt the user with a success message (of any kind).
-     * Otherwise, an informative message regarding the issue shall be displayed (of any kind).
      * All the crashes/exceptions/errors shall be handled.
-     * The student model is pre-made and its relationship to the course model can be seen under the models in backend.
-     * Create the students based on the models and according to the relationship between a student and a course.
-     * The endpoint for this function is also missing in the backend.
      */
     addStudent() {
-      this.issueToastMessage()
-
+      this.validateInput() // NOTE: Ask TA if the error-handling is adequate for full-points
+    },
+    createIndependentStudentEntityDB() {
+      // NOTE: Ask TA if we are expected to CREATE a student here as well, or if we only need to create student in the course-array
       Api.post('/students', {
         SSN: this.ssn,
         firstName: this.fName,
-        lastName: this.lastName,
+        lastName: this.lName,
         emailAddress: this.email
       })
-      console.warn('Create student')
-      // TODO
     },
-    issueToastMessage() {
-      // If username.length > 3 --> Green toast, otherwise red, check gmail as well
-      // Or only check if null, then ask TA if more is required
-
-      if (this.email === '') { // this.ssn === '' || this.fName === '' || this.lName === '' ||
+    enrollExistingStudentInCourseDB() {
+      Api.post(`/courses/${this.$route.params.id}/students`, {
+        SSN: this.ssn,
+        firstName: this.fName,
+        lastName: this.lName,
+        emailAddress: this.email
+      })
+    },
+    validateInput() {
+      if (this.email === '') { // NOTE: Ask TA if more conditions is needed for full points
         this.makeToast('danger', 'Cannot create account, add a valid email.', 'Fail')
       } else {
         this.makeToast('success', 'Account successfully created!', 'Success')
+        this.createIndependentStudentEntityDB()
+        this.enrollExistingStudentInCourseDB()
       }
     },
     makeToast(variant = null, bodyContent, titleContent) {
