@@ -66,14 +66,48 @@ public class OrdersUI
 		/////////////////////////////////////////////////////////////////////////////////
 
 		while (!done)
-		{	
+		{
+
+			while(!authenticated && !created) {
+				System.out.println("Select an Option: \n");
+				System.out.println("1: Login");
+				System.out.println("2: Register");
+				option = keyboard.next().charAt(0);
+
+				if(option == '1') {
+
+					// Login
+					System.out.print("Enter Username: ");
+					username = keyboard.next();
+					System.out.print("Enter Password: ");
+					password = keyboard.next();
+					authenticated = api.authenticate(username, password);
+					if(!authenticated) {
+						System.out.println("Invalid credentials.");
+					}
+
+				}
+
+				if(option == '2') {
+					// Register
+					System.out.print("Enter Username: ");
+					username = keyboard.next();
+					System.out.print("Enter Password: ");
+					password = keyboard.next();
+					created = api.makeUser(username, password);
+				}
+
+			}
+
+			api.reportLog(username + " has logged in");
 			// starting main menu: set of choices ->
 			System.out.println( "\n\n\n\n" );
 			System.out.println( "Orders Database User Interface: \n" );
 			System.out.println( "Select an Option: \n" );
 			System.out.println( "1: Retrieve all orders in the order database." );
 			System.out.println( "2: Retrieve an order by ID." );
-			System.out.println( "3: Add a new order to the order database." );		
+			System.out.println( "3: Add a new order to the order database." );
+			System.out.println( "4: Delete an order from the order database." );
 			System.out.println( "X: Exit\n" );
 			System.out.print( "\n>>>> " );
 			option = keyboard.next().charAt(0);	
@@ -181,6 +215,7 @@ public class OrdersUI
 						System.out.println("\nCreating order...");
 						response = api.newOrder(date, first, last, address, phone);
 						System.out.println(response);
+						api.reportLog(username + " has created a new order");
 
 					} catch(Exception e) {
 
@@ -208,6 +243,14 @@ public class OrdersUI
 				  Add the UI implementation for this new option, selectable by users, that is to be part of 
 				  the functionality to delete an order of a particular ID from the database.
 			*/
+
+			if(option == '4') {
+				System.out.println("Enter order ID: ");
+				String orderID = keyboard.nextLine();
+				response = api.deleteOrder(orderID);
+				api.reportLog(username + " has deleted order " + orderID);
+				System.out.println(response);
+			}
 			
 			//////////// option X ////////////
 
@@ -216,6 +259,7 @@ public class OrdersUI
 				// Here the user is done, so we set the Done flag, and exit from the application.
 				authenticated = false;
 				done = true;
+				api.reportLog(username + " has logged out");
 				System.out.println( "\nDone...\n\n" );
 
 			} // if

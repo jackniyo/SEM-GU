@@ -17,6 +17,7 @@
 *
 * External Dependencies: None
 ******************************************************************************************************************/
+import java.util.Date;
 import java.util.Properties;
 import java.io.FileReader;
 import java.io.IOException;
@@ -120,6 +121,21 @@ public class MSClientAPI
 			- Delete an order from the database, matching the orderID that is passed 
 			  as an argument in this function.
 		*/
+
+		try	{
+			// Get the registry entry for CreateServices service from registry.properties
+			String entry = registry.getProperty("DeleteServices");
+			String host = entry.split(":")[0];
+			String port = entry.split(":")[1];
+
+			// Get the RMI registry (should be running at start, in order to locate the port)
+			Registry reg = LocateRegistry.getRegistry(host, Integer.parseInt(port));
+			DeleteServicesAI obj = (DeleteServicesAI) reg.lookup("DeleteServices");
+			response = obj.removeOrder(id);
+		} catch (Exception e) {
+			return("Internal error in making the order. Try again.");
+		}
+
 		return(response);	
 	}
 
@@ -130,7 +146,17 @@ public class MSClientAPI
 			  Without provided valid login credentials at the start of the application, the 
 			  user should not be able to access any functionalities of the system.
 		*/
-		return false;	
+
+			// Get the registry entry for CreateServices service from registry.properties
+			String entry = registry.getProperty("AuthenticationServices");
+			String host = entry.split(":")[0];
+			String port = entry.split(":")[1];
+
+			// Get the RMI registry (should be running at start, in order to locate the port)
+			Registry reg = LocateRegistry.getRegistry(host, Integer.parseInt(port));
+			AuthenticationServicesAI obj = (AuthenticationServicesAI) reg.lookup("AuthenticationServices");
+			return obj.authenticate(username, password);
+
 	}
 
 	public boolean makeUser(String username, String password) throws Exception {
@@ -139,15 +165,45 @@ public class MSClientAPI
 			- Register a user account for first-time users, where a username, and password are provided 
 			  as arguments. No two users shall have the same username.
 		*/
-		return false;
+		try	{
+			// Get the registry entry for CreateServices service from registry.properties
+			String entry = registry.getProperty("AuthenticationServices");
+			String host = entry.split(":")[0];
+			String port = entry.split(":")[1];
+
+			// Get the RMI registry (should be running at start, in order to locate the port)
+			Registry reg = LocateRegistry.getRegistry(host, Integer.parseInt(port));
+			AuthenticationServicesAI obj = (AuthenticationServicesAI) reg.lookup("AuthenticationServices");
+			return obj.register(username, password);
+
+		} catch (Exception e) {
+			return false;
+		}
+
 	}
 
 	public void reportLog(String msg) throws Exception {
+
 		/*
 			TODO: 
 			- Logging activity such as to keep track of creation/modification operations conducted in the system, as
 		   	  well as which user conducted it, along with when there are errors that take place in the
 			  system (exceptions), to know when and which functionality was affected.
-		*/ 	
+		*/
+		try	{
+			// Get the registry entry for CreateServices service from registry.properties
+			String entry = registry.getProperty("LoggingServices");
+			String host = entry.split(":")[0];
+			String port = entry.split(":")[1];
+
+			// Get the RMI registry (should be running at start, in order to locate the port)
+			Registry reg = LocateRegistry.getRegistry(host, Integer.parseInt(port));
+			LoggingServicesAI obj = (LoggingServicesAI) reg.lookup("LoggingServices");
+			obj.log(msg);
+
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+
 	}
 }
