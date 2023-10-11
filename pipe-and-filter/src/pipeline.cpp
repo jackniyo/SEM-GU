@@ -31,7 +31,7 @@ int main(int32_t argc, char **argv)
             // FILTER 2: flip image along vertical axis
             filter2(img);
             // FILTER 3: convert image to grey scale
-            filter3(img);
+            img = filter3(img);
 
             // Save the resulting image
             cv::imwrite("../" + path, img);
