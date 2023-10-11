@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var Course = require('../models/course');
+var Student = require('../models/student')
 
 /**
  * Implement the endpoint for creating/adding a student to the list of students of a course.
@@ -8,16 +9,57 @@ var Course = require('../models/course');
  * The student object shall exist independently of the course and shall be also found in the list of
  * all students (not just specific to a course).
  */
-router.post("/api/courses/:id/students", function (req, res, next) {
-    // TODO
+// Add student to the list of students of a specific course
+router.post("/api/courses/:id/students", async function (req, res, next) {
+  try {
+    var id = req.params.id
+    var course = await Course.findOne( {_id: id}, function(err, course) {
+      if (err) { return res.status(500).send(err) }
+      if (course === null) {
+        return res.status(404).json({'message': 'Course not found'})
+      }
+    })
+
+    const studentSSN = req.body.SSN
+    await Student.findOne( {SSN: studentSSN} )
+      .populate("students")
+      .exec(function (err, student) {
+        if (err) { return res.status(500).send(err) }
+        if (student === null) {
+          return res.status(404).json({'message': 'Student not found'})
+        }
+
+        course.students.push(student)
+        course.save()
+        return res.status(201).json(student)
+      })
+  } catch (error) {
+    next(error)
+  }
 });
 
 /**
  * Implement the endpoint for getting the list of all students of a course.
  * The most important status/response codes such as 500, 404, 201, etc. and their appropriate messages shall be covered.
  */
-router.get('/api/courses/:id/students', function(req, res, next){
-    // TODO
+// Read the student list of a specific course
+router.get('/api/courses/:id/students', async function(req, res, next){
+    try {
+      var id = req.params.id
+      await Course.findOne( {_id: id} )
+        .populate("students")
+        .populate("staffs")
+        .exec(function (err, course) {
+          if (err) { return res.status(500).send(err) }
+          if (course === null) {
+            return res.status(404).json({'message': 'Course not found'})
+          }
+          return res.status(200).json(course.students)
+        })
+
+    } catch (error) {
+      next(error)
+    }
 });
 
 router.post('/api/courses', function(req, res, next){
@@ -57,7 +99,7 @@ router.get("/api/courses/:id", function (req, res, next) {
       }
       if (course === null) {
         return res.status(404).json({'message': 'Course not found!'});
-    }
+      }
     return res.status(200).json({
       course
  });
