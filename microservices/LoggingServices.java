@@ -22,6 +22,9 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.rmi.registry.Registry;
 import java.sql.*;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.Date;
 
 public class LoggingServices extends UnicastRemoteObject implements LoggingServicesAI {
     // Set up the JDBC driver name and database URL
@@ -31,7 +34,8 @@ public class LoggingServices extends UnicastRemoteObject implements LoggingServi
     // Set up the orderinfo database credentials
     static final String USER = "root";
     static final String PASS = Configuration.MYSQL_PASSWORD;
-
+    
+    
     public LoggingServices() throws RemoteException {
     }
 
@@ -58,10 +62,11 @@ public class LoggingServices extends UnicastRemoteObject implements LoggingServi
 
     } // main
 
-    public void register(String msg) throws RemoteException {
+    public void register(String message) throws RemoteException {
         // Local declarations
         Connection conn = null; // connection to the orderinfo database
         Statement stmt = null; // A Statement object is an interface that represents a SQL statement.
+
       
         try {
             // Here we load and initialize the JDBC connector. Essentially a static class
@@ -78,7 +83,12 @@ public class LoggingServices extends UnicastRemoteObject implements LoggingServi
             // database
             // that we are connected to (via JDBC in this case).
 
+            
             stmt = conn.createStatement();
+
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String timestamp = sdf.format(new Date());
+            String msg =message+" at:"+ timestamp;
 
             String sql = "INSERT INTO loggingActivity(statment) VALUES (\"" + msg + "\")";
 

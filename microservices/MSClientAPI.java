@@ -26,6 +26,7 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.time.LocalDate;
 
 public class MSClientAPI
 {
@@ -207,6 +208,8 @@ public class MSClientAPI
 
 	}
 	public String getlogg() throws Exception{
+
+		
 		String message="";
 		
 		try	{
@@ -224,6 +227,7 @@ public class MSClientAPI
 
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
+			
 		}
 
 
