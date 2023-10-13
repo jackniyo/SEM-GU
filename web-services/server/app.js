@@ -9,7 +9,7 @@ var coursesController = require('./controllers/courses');
 var studentsController = require('./controllers/students');
 
 // Variables
-var mongoURI = process.env.MONGODB_URI || 'mongodb://localhost:27017/brimula';
+var mongoURI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/brimula';
 var port = process.env.PORT || 3000;
 
 // Connect to MongoDB

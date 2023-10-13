@@ -46,8 +46,9 @@ export default {
      * The student model is pre-made and its relationship to the course model can be seen under the models in backend.
      * The endpoint for this function is also missing in the backend.
      */
-    getAllStudents() {
-      // TODO
+    async getAllStudents() { // NOTE: Ask TA of specifications on 'error-handling in FrontEnd'
+      const studentsInSpecificCourse = await Api.get(`/courses/${this.$route.params.id}/students`)
+      this.students = studentsInSpecificCourse.data
     },
     deleteStudent(id) {
       Api.delete(`/courses/${this.$route.params.id}/students/${id}`, {
