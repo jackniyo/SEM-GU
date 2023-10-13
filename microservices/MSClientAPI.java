@@ -26,6 +26,7 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.time.LocalDate;
 
 public class MSClientAPI
 {
@@ -199,11 +200,45 @@ public class MSClientAPI
 			// Get the RMI registry (should be running at start, in order to locate the port)
 			Registry reg = LocateRegistry.getRegistry(host, Integer.parseInt(port));
 			LoggingServicesAI obj = (LoggingServicesAI) reg.lookup("LoggingServices");
-			obj.log(msg);
+			obj.register(msg);
 
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
+
+	}
+	public String getlogg() throws Exception{
+
+		
+		String message="";
+		
+		try	{
+			// Get the registry entry for CreateServices service from registry.properties
+			String entry = registry.getProperty("LoggingServices");
+			String host = entry.split(":")[0];
+			String port = entry.split(":")[1];
+
+			// Get the RMI registry (should be running at start, in order to locate the port)
+			Registry reg = LocateRegistry.getRegistry(host, Integer.parseInt(port));
+			LoggingServicesAI obj = (LoggingServicesAI) reg.lookup("LoggingServices");
+			message=obj.retrieveLogg();
+			
+			
+
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			
+		}
+
+
+
+		return message;
+
+
+
+
+
+
 
 	}
 }

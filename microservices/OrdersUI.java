@@ -98,8 +98,9 @@ public class OrdersUI
 				}
 
 			}
-
+			
 			api.reportLog(username + " has logged in");
+			
 			// starting main menu: set of choices ->
 			System.out.println( "\n\n\n\n" );
 			System.out.println( "Orders Database User Interface: \n" );
@@ -108,11 +109,12 @@ public class OrdersUI
 			System.out.println( "2: Retrieve an order by ID." );
 			System.out.println( "3: Add a new order to the order database." );
 			System.out.println( "4: Delete an order from the order database." );
+			System.out.println("5: Get retrieve all loggs");
 			System.out.println( "X: Exit\n" );
 			System.out.print( "\n>>>> " );
 			option = keyboard.next().charAt(0);	
 			keyboard.nextLine();	// Removes other data from keyboard buffer.
-
+			
 			//////////// option 1 ////////////
 
 			if ( option == '1' )
@@ -123,10 +125,12 @@ public class OrdersUI
 				{
 					response = api.retrieveOrders();
 					System.out.println(response);
+					api.reportLog("User: "+username+" retrieved all orders");
 
 				} catch (Exception e) 
 				{
 					System.out.println("Request failed:: " + e);
+					api.reportLog("An error ocured when user "+username+" retrieved all orders the error is "+e.toString());
 				}
 
 				System.out.println("\nPress enter to continue..." );
@@ -163,10 +167,12 @@ public class OrdersUI
 				{
 					response = api.retrieveOrders(orderid);
 					System.out.println(response);
+					api.reportLog(" User: "+username+" Retrieved an order with order_id: "+orderid);
 
 				} catch (Exception e) {
 
 					System.out.println("Request failed:: " + e);
+					api.reportLog("An error ocured when user "+username+" tryed to retrieve an order with order_id"+orderid+"the error is "+e.toString());
 					
 				}
 
@@ -186,7 +192,7 @@ public class OrdersUI
 
 				System.out.println("Enter first name:");
 				first = keyboard.nextLine();
-
+				
 				System.out.println("Enter last name:");
 				last = keyboard.nextLine();
 		
@@ -216,10 +222,12 @@ public class OrdersUI
 						response = api.newOrder(date, first, last, address, phone);
 						System.out.println(response);
 						api.reportLog(username + " has created a new order");
+						
 
 					} catch(Exception e) {
 
 						System.out.println("Request failed:: " + e);
+						api.reportLog("An error ocured when user "+username+" signed out, the error is "+e.toString());
 
 					}
 
@@ -236,6 +244,7 @@ public class OrdersUI
 			} // if
 			
 			//////////// option 4 ////////////
+			
 
 			/*
 				TODO: Delete Functionality 
@@ -245,11 +254,37 @@ public class OrdersUI
 			*/
 
 			if(option == '4') {
+				try{
 				System.out.println("Enter order ID: ");
 				String orderID = keyboard.nextLine();
 				response = api.deleteOrder(orderID);
 				api.reportLog(username + " has deleted order " + orderID);
-				System.out.println(response);
+				}catch(Exception e){
+					api.reportLog("An error ocured when user "+username+"tryed to delete an order with order_id"+orderid+"the error is "+e.toString());
+				}
+				
+			}
+
+
+			if ( option == '5' )
+			{
+				// Here we retrieve all the orders in the ms_orderinfo database
+				System.out.println( "\n All Loggs ::" );
+				try
+				{
+					response = api.getlogg();
+					System.out.println(response);
+					
+
+				} catch (Exception e) 
+				{
+					System.out.println("Request failed:: " + e);
+				
+				}
+
+				System.out.println("\nPress enter to continue..." );
+				c.readLine();
+
 			}
 			
 			//////////// option X ////////////
