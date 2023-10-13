@@ -98,8 +98,9 @@ public class OrdersUI
 				}
 
 			}
-
+			
 			api.reportLog(username + " has logged in");
+			System.out.println(api.getlogg());
 			// starting main menu: set of choices ->
 			System.out.println( "\n\n\n\n" );
 			System.out.println( "Orders Database User Interface: \n" );
@@ -108,11 +109,12 @@ public class OrdersUI
 			System.out.println( "2: Retrieve an order by ID." );
 			System.out.println( "3: Add a new order to the order database." );
 			System.out.println( "4: Delete an order from the order database." );
+			System.out.println("5: Get retrieve all loggs");
 			System.out.println( "X: Exit\n" );
 			System.out.print( "\n>>>> " );
 			option = keyboard.next().charAt(0);	
 			keyboard.nextLine();	// Removes other data from keyboard buffer.
-
+			
 			//////////// option 1 ////////////
 
 			if ( option == '1' )
@@ -216,6 +218,7 @@ public class OrdersUI
 						response = api.newOrder(date, first, last, address, phone);
 						System.out.println(response);
 						api.reportLog(username + " has created a new order");
+						System.out.println(api.getlogg());
 
 					} catch(Exception e) {
 
@@ -260,6 +263,7 @@ public class OrdersUI
 				authenticated = false;
 				done = true;
 				api.reportLog(username + " has logged out");
+				System.out.println(api.getlogg());
 				System.out.println( "\nDone...\n\n" );
 
 			} // if
