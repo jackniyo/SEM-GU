@@ -199,7 +199,7 @@ public class MSClientAPI
 			// Get the RMI registry (should be running at start, in order to locate the port)
 			Registry reg = LocateRegistry.getRegistry(host, Integer.parseInt(port));
 			LoggingServicesAI obj = (LoggingServicesAI) reg.lookup("LoggingServices");
-			obj.log(msg);
+			obj.register(msg);
 
 		} catch (Exception e) {
 			System.out.println(e.getMessage());

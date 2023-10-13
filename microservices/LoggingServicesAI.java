@@ -1,8 +1,7 @@
-import java.rmi.*;
+import java.rmi.RemoteException;
 
-public interface LoggingServicesAI extends java.rmi.Remote  {
-
-    void log(String message) throws RemoteException;
-    //boolean logError(String msg, String serviceName) throws RemoteException;
+public interface LoggingServicesAI extends java.rmi.Remote{
+    
+    public void register(String msg) throws RemoteException;
 
 }
