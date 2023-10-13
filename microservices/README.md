@@ -141,7 +141,7 @@ rmiregistry 1098
 In the second line, the port used in the RMI is to be declared as an environment variable, as multiple services will communicate via RMI, and they run isolated in their own ports. Hence it is declared at the start, in it's intended terminal window. In the example of RetrieveServices, declare the port as 1098, according to the way it is defined in the registry.properties file, and then run *that* particular service (comes later in Step 3). 
 
 ```
-export CLASSPATH=/Users/niyomugabojackson/Desktop/assisgment04/microservices/mysql-connector-j-8.0.33.jar:/Users/niyomugabojackson/Desktop/assisgment04/microservices/
+export CLASSPATH=<full-path to the JDBC>:<full-path to the microservices/ dir>
 export RMI_REMOTE_PORT=1098
 ```
 3. Then, build the .java files, and run the .class file of the microservice that is to be run on that particular port:
