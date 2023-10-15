@@ -149,7 +149,8 @@ public class LoggingServices extends UnicastRemoteObject implements LoggingServi
             conn.close();
 
         } catch(Exception e) {
-            ReturnString = e.toString();
+            System.out.println(e.toString());
+            return "something was wrong at server";
         } 
         
         return(ReturnString);

@@ -39,6 +39,8 @@ public class OrdersUI
 		MSClientAPI api = new MSClientAPI();		
 		boolean authenticated = false;
 		boolean created = false;
+		boolean loggChecked=false;
+		
 
 		/////////////////////////////////////////////////////////////////////////////////
 		//  TODO: 
@@ -65,6 +67,7 @@ public class OrdersUI
 		// 								Main UI loop
 		/////////////////////////////////////////////////////////////////////////////////
 
+
 		while (!done)
 		{
 
@@ -81,10 +84,16 @@ public class OrdersUI
 					username = keyboard.next();
 					System.out.print("Enter Password: ");
 					password = keyboard.next();
-					authenticated = api.authenticate(username, password);
-					if(!authenticated) {
-						System.out.println("Invalid credentials.");
-					}
+					loggChecked=api.checkLogg();
+					if(loggChecked){
+					   authenticated = api.authenticate(username, password);
+					   if(!authenticated) {
+						   System.out.println("Invalid credentials.");
+					    } 
+				    }else
+					{
+						System.out.println("The LoggServices must be running ");
+				    }
 
 				}
 
@@ -94,10 +103,13 @@ public class OrdersUI
 					username = keyboard.next();
 					System.out.print("Enter Password: ");
 					password = keyboard.next();
-					created = api.makeUser(username, password);
+					loggChecked=api.checkLogg();
+					if(loggChecked){
+					   created = api.makeUser(username, password);
+				    } else{System.out.println("The LoggServices Must be running");}
 				}
 
-			}
+		    }
 			
 			api.reportLog(username + " has logged in");
 			
@@ -302,7 +314,9 @@ public class OrdersUI
 		} // while
 
 		keyboard.close();
-		
+
   	} // main
+
+
 
 } // OrdersUI
