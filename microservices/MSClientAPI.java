@@ -233,12 +233,20 @@ public class MSClientAPI
 
 
 		return message;
-
-
-
-
-
-
-
 	}
+
+	public boolean checkLogg(){
+		try{
+			String addLogg = getlogg();
+	
+			if(addLogg.isBlank()){
+				return false;
+			}
+
+		}catch(Exception e){
+					   
+		}
+		return true;
+	}
+
 }
