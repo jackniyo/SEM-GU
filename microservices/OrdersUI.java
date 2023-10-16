@@ -89,7 +89,7 @@ public class OrdersUI
 					   authenticated = api.authenticate(username, password);
 					   if(!authenticated) {
 						   System.out.println("Invalid credentials.");
-					    } 
+					    }
 				    }else
 					{
 						System.out.println("The LoggServices must be running ");
@@ -281,7 +281,7 @@ public class OrdersUI
 			if ( option == '5' )
 			{
 				// Here we retrieve all the orders in the ms_orderinfo database
-				System.out.println( "\n All Loggs ::" );
+				System.out.println( "All Logs:" );
 				try
 				{
 					response = api.getlogg();

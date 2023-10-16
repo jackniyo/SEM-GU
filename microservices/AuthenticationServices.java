@@ -6,8 +6,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
-public class AuthenticationServices extends UnicastRemoteObject implements AuthenticationServicesAI  {
-
+public class AuthenticationServices extends UnicastRemoteObject implements AuthenticationServicesAI {
 
     // Set up the JDBC driver name and database URL
     static final String JDBC_CONNECTOR = "com.mysql.jdbc.Driver";
@@ -17,13 +16,12 @@ public class AuthenticationServices extends UnicastRemoteObject implements Authe
     static final String USER = "root";
     static final String PASS = Configuration.MYSQL_PASSWORD;
 
-    public AuthenticationServices() throws RemoteException {}
+    public AuthenticationServices() throws RemoteException {
+    }
 
     // Main service loop
-    public static void main(String args[])
-    {
-        try
-        {
+    public static void main(String args[]) {
+        try {
             AuthenticationServices obj = new AuthenticationServices();
 
             Registry registry = Configuration.createRegistry();
@@ -34,10 +32,10 @@ public class AuthenticationServices extends UnicastRemoteObject implements Authe
             for (String name : boundNames) {
                 System.out.println("\t" + name);
             }
-            // Bind this object instance to the name DeleteServices' port in the rmiregistry, as per registry.properties
+            // Bind this object instance to the name DeleteServices' port in the
+            // rmiregistry, as per registry.properties
 
-        } catch (Exception e)
-        {
+        } catch (Exception e) {
             System.out.println("AuthenticationServices binding err: " + e.getMessage());
             e.printStackTrace();
         }
@@ -48,32 +46,33 @@ public class AuthenticationServices extends UnicastRemoteObject implements Authe
     public boolean authenticate(String username, String password) {
 
         // Local declarations
-        Connection conn = null;		                 // connection to the orderinfo database
-        Statement stmt = null;		                 // A Statement object is an interface that represents a SQL statement.
-        boolean authenticated = false;	     // Return string. If everything works you get an 'OK' message
+        Connection conn = null; // connection to the orderinfo database
+        Statement stmt = null; // A Statement object is an interface that represents a SQL statement.
+        boolean authenticated = false; // Return string. If everything works you get an 'OK' message
         // if not you get an error string
-        try
-        {
+        try {
             // Here we load and initialize the JDBC connector. Essentially a static class
             // that is used to provide access to the database from inside this class.
             Class.forName(JDBC_CONNECTOR);
 
-            //Open the connection to the orderinfo database
+            // Open the connection to the orderinfo database
 
-            //System.out.println("Connecting to database...");
-            conn = DriverManager.getConnection(DB_URL,USER,PASS);
+            // System.out.println("Connecting to database...");
+            conn = DriverManager.getConnection(DB_URL, USER, PASS);
 
             // Here we execute the addition query. Not that the Statement class is part
-            // of the Java.rmi.* package that enables you to submit SQL queries to the database
+            // of the Java.rmi.* package that enables you to submit SQL queries to the
+            // database
             // that we are connected to (via JDBC in this case).
 
             stmt = conn.createStatement();
 
-            String sql = "SELECT * FROM authentication WHERE username=\"" + username + "\" AND password=\"" + password + "\"";
+            String sql = "SELECT * FROM authentication WHERE username=\"" + username + "\" AND password=\"" + password
+                    + "\"";
 
             // execute the update
             ResultSet result = stmt.executeQuery(sql);
-            if(result.next()) {
+            if (result.next()) {
                 authenticated = true;
             }
             // clean up the environment
@@ -82,9 +81,8 @@ public class AuthenticationServices extends UnicastRemoteObject implements Authe
             stmt.close();
             conn.close();
 
-        } catch(Exception e)
-        {
-            System.out.println(e.getMessage());
+        } catch (Exception e) {
+            System.out.println(e.toString());
             authenticated = false;
         }
 
@@ -96,23 +94,23 @@ public class AuthenticationServices extends UnicastRemoteObject implements Authe
     public boolean register(String username, String password) {
 
         // Local declarations
-        Connection conn = null;		                 // connection to the orderinfo database
-        Statement stmt = null;		                 // A Statement object is an interface that represents a SQL statement.
-        boolean created = false;	     // Return string. If everything works you get an 'OK' message
+        Connection conn = null; // connection to the orderinfo database
+        Statement stmt = null; // A Statement object is an interface that represents a SQL statement.
+        boolean created = false; // Return string. If everything works you get an 'OK' message
         // if not you get an error string
-        try
-        {
+        try {
             // Here we load and initialize the JDBC connector. Essentially a static class
             // that is used to provide access to the database from inside this class.
             Class.forName(JDBC_CONNECTOR);
 
-            //Open the connection to the orderinfo database
+            // Open the connection to the orderinfo database
 
-            //System.out.println("Connecting to database...");
-            conn = DriverManager.getConnection(DB_URL,USER,PASS);
+            // System.out.println("Connecting to database...");
+            conn = DriverManager.getConnection(DB_URL, USER, PASS);
 
             // Here we execute the addition query. Not that the Statement class is part
-            // of the Java.rmi.* package that enables you to submit SQL queries to the database
+            // of the Java.rmi.* package that enables you to submit SQL queries to the
+            // database
             // that we are connected to (via JDBC in this case).
 
             stmt = conn.createStatement();
@@ -129,16 +127,13 @@ public class AuthenticationServices extends UnicastRemoteObject implements Authe
             conn.close();
             created = true;
 
-        } catch(Exception e)
-        {
+        } catch (Exception e) {
             System.out.println(e.toString());
             created = false;
         }
 
         return created;
 
-
     }
-
 
 }
